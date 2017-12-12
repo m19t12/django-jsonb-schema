@@ -1,9 +1,14 @@
 apipkg==1.4
 attrs==17.3.0
+certifi==2017.11.5
+chardet==3.0.4
 coverage==4.4.2
+coveralls==1.2.0
 Django==1.11
 django-polls==0.1
+docopt==0.6.2
 execnet==1.5.0
+idna==2.6
 pluggy==0.6.0
 psycopg2==2.7.3.2
 py==1.5.2
@@ -13,5 +18,7 @@ pytest-django==3.1.2
 pytest-forked==0.2
 pytest-xdist==1.20.1
 pytz==2017.3
+requests==2.18.4
 six==1.11.0
 ujson==1.35
+urllib3==1.22
