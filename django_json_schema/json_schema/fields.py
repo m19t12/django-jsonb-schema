@@ -32,10 +32,6 @@ class JSONSchemaField(JSONField):
                     code='test',
                 )
 
-    def to_python(self, value):
-        print(value)
-        return value
-
     def formfield(self, **kwargs):
         defaults = {
             'form_class': JSONWidgetFormField,

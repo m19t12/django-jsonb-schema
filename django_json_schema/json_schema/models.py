@@ -7,7 +7,7 @@ from .schemas import TestFieldSchema
 
 # Create your models here.
 class JSONSchemaModel(models.Model):
-    test_field = JSONSchemaField(blank=True, null=True, schema=TestFieldSchema)
+    test_field = JSONSchemaField(blank=True, schema=TestFieldSchema)
     name = models.TextField
 
     def __str__(self):

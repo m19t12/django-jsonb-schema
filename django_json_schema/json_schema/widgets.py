@@ -45,7 +45,6 @@ class JSONWidget(Widget):
             saved_data.update({
                 widget_name: super(JSONWidget, self).value_from_datadict(data, files, widget_name)
             })
-        print(type(saved_data))
         return ujson.dumps(saved_data)
 
     def value_omitted_from_data(self, data, files, name):
