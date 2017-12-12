@@ -12,7 +12,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='django-json-schema',
     version='0.1',
-    packages=['django_json_schema.json_schema'],
+    packages=['json_schema'],
     include_package_data=True,
     license='GPL License',
     description='Django JSON Schema Field.',

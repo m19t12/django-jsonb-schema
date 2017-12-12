@@ -1,2 +1,2 @@
 include README.md
-recursive-include django_json_schema/json_schema/templates *
+recursive-include json_schema/templates *
