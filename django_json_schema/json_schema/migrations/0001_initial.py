@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='JSONSchemaModel',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('test_field', json_schema.fields.JSONWidgetField(blank=True, default={}, null=True)),
+                ('test_field', json_schema.fields.JSONSchemaField(blank=True, default={}, null=True)),
             ],
         ),
     ]

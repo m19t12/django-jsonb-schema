@@ -57,8 +57,7 @@ class JSONWidget(Widget):
     def decompress(self, field, value):
         value_ = ujson.loads(value)
 
-        if field.name in value_:
-            print(value_)
+        if value_ is not None and field.name in value_:
             return value_[field.name]
         else:
             if field.default is not NOT_PROVIDED:
