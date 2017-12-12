@@ -14,13 +14,13 @@ def validation_error_message(validation_error):
     return error_list
 
 
-class JSONWidgetField(JSONField):
+class JSONSchemaField(JSONField):
     def __init__(self, verbose_name=None, name=None, encoder=None, schema=None, **kwargs):
         self.schema = schema
-        super(JSONWidgetField, self).__init__(verbose_name, name, encoder, **kwargs)
+        super(JSONSchemaField, self).__init__(verbose_name, name, encoder, **kwargs)
 
     def validate(self, value, model_instance):
-        super(JSONWidgetField, self).validate(value, model_instance)
+        super(JSONSchemaField, self).validate(value, model_instance)
 
         if self.schema:
             try:
@@ -42,4 +42,4 @@ class JSONWidgetField(JSONField):
             'schema': self.schema
         }
         defaults.update(kwargs)
-        return super(JSONWidgetField, self).formfield(**defaults)
+        return super(JSONSchemaField, self).formfield(**defaults)
