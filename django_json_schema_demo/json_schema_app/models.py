@@ -1,7 +1,6 @@
 # coding=utf-8
 from django.db import models
-
-from .fields import JSONSchemaField
+from json_schema.fields import JSONSchemaField
 from .schemas import TestFieldSchema
 
 

@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 
 class JsonSchemaConfig(AppConfig):
-    name = 'json_schema'
+    name = 'json_schema_app'

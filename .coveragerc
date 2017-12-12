@@ -1,0 +1,5 @@
+[run]
+omit =
+    django_json_schema_demo/*
+    setup.py
+    manage.py

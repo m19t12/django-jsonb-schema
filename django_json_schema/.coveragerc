@@ -1,8 +1,0 @@
-[run]
-omit =
-    django_json_schema/urls.py
-    django_json_schema/wsgi.py
-    json_schema/apps.py
-    json_schema/views.py
-    */migrations/*
-    manage.py

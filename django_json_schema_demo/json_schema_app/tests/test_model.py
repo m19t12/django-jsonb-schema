@@ -1,7 +1,7 @@
 # coding=utf-8
 import pytest
 from django.core.exceptions import ValidationError
-from json_schema.models import JSONSchemaModel
+from django_json_schema_demo.json_schema_app.models import JSONSchemaModel
 
 
 # Create your tests here.
