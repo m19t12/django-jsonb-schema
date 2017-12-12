@@ -1,2 +1,2 @@
-# django-json-schema
+# Django JSON Schema
 Django JSON Schema Field

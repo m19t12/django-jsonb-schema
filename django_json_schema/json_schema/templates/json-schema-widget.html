@@ -1,0 +1,9 @@
+<div class="form-row" style="border-bottom: none;">
+    <br>
+</div>
+{% for widget in widget.subwidgets %}
+    <div class="form-row" style="border-bottom: none;">
+        <label for="{{ widget.name }}">{{ widget.name }}</label>
+        {% include widget.template_name %}
+    </div>
+{% endfor %}
