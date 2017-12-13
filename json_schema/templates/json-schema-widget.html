@@ -1,9 +1,20 @@
 <div class="form-row" style="border-bottom: none;">
     <br>
 </div>
+
+
+{% if widget.sub_widget %}
+    {% with widget=widget.sub_widget %}{% endwith %}
+{% endif %}
+
 {% for widget in widget.subwidgets %}
-    <div class="form-row" style="border-bottom: none;">
-        <label for="{{ widget.name }}">{{ widget.name }}</label>
-        {% include widget.template_name %}
-    </div>
+    {% if widget.sub_widget %}
+        <label for="{{ widget.sub_widget.name }}">{{ widget.sub_widget.name }}</label>
+        {% include widget.sub_widget.template_name with widget=widget.sub_widget %}
+    {% else %}
+        <div class="form-row" style="border-bottom: none;">
+            <label for="{{ widget.name }}">{{ widget.name }}</label>
+            {% include widget.template_name %}
+        </div>
+    {% endif %}
 {% endfor %}

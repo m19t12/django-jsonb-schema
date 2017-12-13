@@ -5,15 +5,6 @@ from django.core import exceptions
 from .forms import JSONWidgetFormField
 
 
-def validation_error_message(validation_error):
-    error_list = [{key: errors[0]} for key, errors in validation_error.args[0].items()]
-    for error in error_list:
-        for key, error_message in error.items():
-            error_message.message = 'Property {}: {}'.format(key, error_message.message)
-    error_list = [{key: errors[0].messages} for key, errors in validation_error.args[0].items()]
-    return error_list
-
-
 class JSONSchemaField(JSONField):
     def __init__(self, verbose_name=None, name=None, encoder=None, schema=None, **kwargs):
         self.schema = schema
@@ -22,15 +13,7 @@ class JSONSchemaField(JSONField):
     def validate(self, value, model_instance):
         super(JSONSchemaField, self).validate(value, model_instance)
 
-        if self.schema:
-            try:
-                self.schema(**value).full_clean()
-            except exceptions.ValidationError as error:
-                error_list = validation_error_message(error)
-                raise exceptions.ValidationError(
-                    error_list,
-                    code='test',
-                )
+        self.sub_validation(value, self.schema())
 
     def formfield(self, **kwargs):
         defaults = {
@@ -39,3 +22,25 @@ class JSONSchemaField(JSONField):
         }
         defaults.update(kwargs)
         return super(JSONSchemaField, self).formfield(**defaults)
+
+    def sub_validation(self, values, schema):
+        for field in schema._meta.get_fields():
+            field_name = field.name
+
+            if field_name in values:
+                field_value = values[field_name]
+            else:
+                field_value = None
+
+            if field.is_relation:
+                sub_schema = field.related_model()
+                self.sub_validation(field_value, sub_schema)
+
+            try:
+                field.clean(field_value, schema)
+            except exceptions.ValidationError as error:
+                raise exceptions.ValidationError(
+                    'Property {}: {}'.format(field_name, error.message),
+                    code='schema_error',
+                    params={'value': field_value},
+                )

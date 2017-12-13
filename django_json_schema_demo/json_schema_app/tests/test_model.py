@@ -8,7 +8,7 @@ from django_json_schema_demo.json_schema_app.models import JSONSchemaModel
 class TestJSONSchemaModel(object):
     @pytest.mark.django_db
     def test_correct_data_save(self):
-        correct_schema = {'name': 'test', 'age': 25}
+        correct_schema = {'name': 'test', 'age': 25, 'sub_schema': {'sub_name': 'test_2', 'sub_age': '23'}}
         correct_model = JSONSchemaModel(test_field=correct_schema)
 
         correct_model.full_clean()
