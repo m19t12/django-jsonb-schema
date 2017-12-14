@@ -18,17 +18,17 @@ class JSONWidget(Widget):
 
         final_attrs = context['widget']['attrs']
         final_attrs['field_name'] = name
-        id_ = final_attrs.get('id')
 
-        context['widget']['subwidgets'] = self.get_sub_widgets(name, self.schema_fields, final_attrs, id_, value)
+        context['widget']['subwidgets'] = self.get_sub_widgets(name, self.schema_fields, final_attrs, value)
 
         return context
 
     def value_from_datadict(self, data, files, name):
+        print(data)
         saved_data = self.get_widget_values(self.schema_fields, data, name)
         return ujson.dumps(saved_data)
 
-    def get_widget_values(self, fields, data, parent_name=None):
+    def get_widget_values(self, fields, data, parent_name):
         save_data = {}
         for field in fields:
             if field.is_relation:
@@ -39,10 +39,7 @@ class JSONWidget(Widget):
                     {field.name: self.get_widget_values(sub_schema_fields, data, field.name)}
                 )
             else:
-                if parent_name:
-                    field_value = data.get('{}_{}'.format(parent_name, field.name))
-                else:
-                    field_value = data.get(field.name)
+                field_value = data.get('{}_{}'.format(parent_name, field.name))
                 # recursion exit.
                 save_data.update(
                     {field.name: field_value}
@@ -50,16 +47,13 @@ class JSONWidget(Widget):
 
         return save_data
 
-    def get_sub_widgets(self, name, fields, final_attrs, id_, value):
+    def get_sub_widgets(self, name, fields, final_attrs, value):
         widget_attrs = final_attrs.copy()
 
         subwidgets = []
 
         for field in fields:
-            if id_:
-                widget_attrs['id'] = 'id_%s_%s' % (name, field.name)
-            else:
-                widget_attrs = final_attrs
+            widget_attrs['id'] = 'id_%s_%s' % (name, field.name)
 
             widget_attrs['field_name'] = field.name
 
@@ -81,7 +75,6 @@ class JSONWidget(Widget):
                             field.name,
                             sub_schema_fields,
                             widget_attrs,
-                            widget_attrs['id'],
                             sub_widget_value
                         )
                     }
