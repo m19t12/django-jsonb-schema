@@ -11,25 +11,24 @@ class JSONWidget(Widget):
     def __init__(self, schema=None, attrs=None):
         self.schema_fields = schema._meta.get_fields()
 
-        self.widgets = self.get_widget_list(self.schema_fields)
-
         super(JSONWidget, self).__init__(attrs=attrs)
 
     def get_context(self, name, value, attrs):
         context = super(JSONWidget, self).get_context(name, value, attrs)
 
         final_attrs = context['widget']['attrs']
+        final_attrs['field_name'] = name
         id_ = final_attrs.get('id')
 
-        context['widget']['subwidgets'] = self.get_sub_widgets(self.schema_fields, final_attrs, id_, value)
+        context['widget']['subwidgets'] = self.get_sub_widgets(name, self.schema_fields, final_attrs, id_, value)
 
         return context
 
     def value_from_datadict(self, data, files, name):
-        saved_data = self.get_widget_values(self.schema_fields, data)
+        saved_data = self.get_widget_values(self.schema_fields, data, name)
         return ujson.dumps(saved_data)
 
-    def get_widget_values(self, fields, data):
+    def get_widget_values(self, fields, data, parent_name=None):
         save_data = {}
         for field in fields:
             if field.is_relation:
@@ -37,28 +36,33 @@ class JSONWidget(Widget):
                 sub_schema = field.rel.to
                 sub_schema_fields = sub_schema._meta.get_fields()
                 save_data.update(
-                    {field.name: self.get_widget_values(sub_schema_fields, data)}
+                    {field.name: self.get_widget_values(sub_schema_fields, data, field.name)}
                 )
             else:
+                if parent_name:
+                    field_value = data.get('{}_{}'.format(parent_name, field.name))
+                else:
+                    field_value = data.get(field.name)
                 # recursion exit.
                 save_data.update(
-                    {field.name: data.get(field.name)}
+                    {field.name: field_value}
                 )
 
         return save_data
 
-    def value_omitted_from_data(self, data, files, name):
-        omitted_values = all(
-            widget.value_omitted_from_data(data, files, widget_name)
-            for widget_name, widget in self.widgets.items()
-        )
-        print('hit')
-        return omitted_values
+    def get_sub_widgets(self, name, fields, final_attrs, id_, value):
+        widget_attrs = final_attrs.copy()
 
-    def get_sub_widgets(self, fields, final_attrs, id_, value):
         subwidgets = []
 
         for field in fields:
+            if id_:
+                widget_attrs['id'] = 'id_%s_%s' % (name, field.name)
+            else:
+                widget_attrs = final_attrs
+
+            widget_attrs['field_name'] = field.name
+
             if field.is_relation:
                 # recursion if find relationship.
                 sub_schema = field.rel.to
@@ -68,30 +72,32 @@ class JSONWidget(Widget):
 
                 sub_widget = {
                     'sub_widget': {
-                        'name': field.name,
+                        'name': widget_attrs['field_name'],
                         'attrs': {
-                            'id': '%s_%s' % (id_, field.name)
+                            'id': widget_attrs['id']
                         },
                         'template_name': 'json-schema-widget.html',
-                        'subwidgets': self.get_sub_widgets(sub_schema_fields, final_attrs, id_, sub_widget_value)
+                        'subwidgets': self.get_sub_widgets(
+                            field.name,
+                            sub_schema_fields,
+                            widget_attrs,
+                            widget_attrs['id'],
+                            sub_widget_value
+                        )
                     }
                 }
                 subwidgets.append(sub_widget)
             else:
                 # recursion exit.
-                field_name = field.name
-
                 field_widget = field.formfield().widget
 
                 widget_value = self.decompress(field, value)
 
-                if id_:
-                    widget_attrs = final_attrs.copy()
-                    widget_attrs['id'] = '%s_%s' % (id_, field_name)
-                else:
-                    widget_attrs = final_attrs
+                widget_name = '{}_{}'.format(name, widget_attrs['field_name'])
 
-                subwidgets.append(field_widget.get_context(field_name, widget_value, widget_attrs)['widget'])
+                subwidgets.append(
+                    field_widget.get_context(widget_name, widget_value, widget_attrs)['widget']
+                )
         return subwidgets
 
     def decompress(self, field, value):
@@ -107,21 +113,3 @@ class JSONWidget(Widget):
                 return field.default
             else:
                 return None
-
-    def get_widget_list(self, fields):
-        widgets = {}
-        for field in fields:
-            if field.is_relation:
-                # recursion if find relationship.
-                sub_schema = field.rel.to
-                sub_schema_fields = sub_schema._meta.get_fields()
-                widgets.update(
-                    {field.name: self.get_widget_list(sub_schema_fields)}
-                )
-            else:
-                # recursion exit.
-                widgets.update(
-                    {field.name: field.formfield().widget}
-                )
-
-        return widgets

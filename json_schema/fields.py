@@ -40,7 +40,7 @@ class JSONSchemaField(JSONField):
                 field.clean(field_value, schema)
             except exceptions.ValidationError as error:
                 raise exceptions.ValidationError(
-                    'Property {}: {}'.format(field_name, error.message),
+                    'Property {} of {}: {}'.format(field_name, schema, error.message),
                     code='schema_error',
                     params={'value': field_value},
                 )
