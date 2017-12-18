@@ -7,7 +7,7 @@ from .schemas import ParentSchema
 
 # Create your models here.
 class JSONSchemaModel(models.Model):
-    parent = JSONSchemaField(blank=True, schema=ParentSchema)
+    parent = JSONSchemaField(blank=True, schema=ParentSchema, schema_array=True)
 
     def __str__(self):
         return '{}'.format(self.pk)

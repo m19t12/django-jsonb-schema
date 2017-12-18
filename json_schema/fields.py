@@ -6,8 +6,9 @@ from .forms import JSONWidgetFormField
 
 
 class JSONSchemaField(JSONField):
-    def __init__(self, verbose_name=None, name=None, encoder=None, schema=None, **kwargs):
-        self.schema = schema
+    def __init__(self, verbose_name=None, name=None, encoder=None, schema=None, schema_array=False, **kwargs):
+        self._schema = schema
+        self.schema_array = schema_array
         super(JSONSchemaField, self).__init__(verbose_name, name, encoder, **kwargs)
 
     def validate(self, value, model_instance):
@@ -18,7 +19,8 @@ class JSONSchemaField(JSONField):
     def formfield(self, **kwargs):
         defaults = {
             'form_class': JSONWidgetFormField,
-            'schema': self.schema
+            'schema': self.schema,
+            'schema_array': self.schema_array
         }
         defaults.update(kwargs)
         return super(JSONSchemaField, self).formfield(**defaults)
@@ -44,3 +46,7 @@ class JSONSchemaField(JSONField):
                     code='schema_error',
                     params={'value': field_value},
                 )
+
+    @property
+    def schema(self):
+        return self._schema

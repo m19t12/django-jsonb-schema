@@ -8,8 +8,10 @@ from django.forms import Widget
 class JSONWidget(Widget):
     template_name = 'json-schema-widget.html'
 
-    def __init__(self, schema=None, attrs=None):
+    def __init__(self, schema=None, schema_array=False, attrs=None):
         self.schema_fields = schema._meta.get_fields()
+        self.schema_array = schema_array
+        print(schema_array)
 
         super(JSONWidget, self).__init__(attrs=attrs)
 
