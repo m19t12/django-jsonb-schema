@@ -11,8 +11,6 @@ class JSONWidget(Widget):
     def __init__(self, schema=None, schema_array=False, attrs=None):
         self.schema_fields = schema._meta.get_fields()
         self.schema_array = schema_array
-        print(schema_array)
-
         super(JSONWidget, self).__init__(attrs=attrs)
 
     def get_context(self, name, value, attrs):
@@ -26,7 +24,6 @@ class JSONWidget(Widget):
         return context
 
     def value_from_datadict(self, data, files, name):
-        print(data)
         saved_data = self.get_widget_values(self.schema_fields, data, name)
         return ujson.dumps(saved_data)
 

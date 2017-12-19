@@ -2,7 +2,7 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from django_json_schema_demo.json_schema_app.models import JSONSchemaModel
+from django_json_schema_demo.json_schema_app.models import JSONSchemaModel, NoSchemaModel
 
 
 # Create your tests here.
@@ -44,3 +44,13 @@ class TestJSONSchemaModel(object):
 
         with pytest.raises(ValidationError):
             incorrect_model.full_clean()
+
+    @pytest.mark.django_db
+    def test_no_schema_model(self):
+        no_schema_model = NoSchemaModel(simple_json={'test': "name"})
+        no_schema_model.full_clean()
+        no_schema_model.save()
+
+        model = NoSchemaModel.objects.first()
+
+        assert model.simple_json['test'] == 'name'
