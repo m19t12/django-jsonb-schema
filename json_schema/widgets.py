@@ -2,6 +2,7 @@
 import ujson
 
 from django.db.models.fields import NOT_PROVIDED
+from django.forms import Media
 from django.forms import Widget
 
 
@@ -9,6 +10,7 @@ class JSONWidget(Widget):
     template_name = 'json-schema-widget.html'
 
     def __init__(self, schema=None, schema_array=False, attrs=None):
+        self._media = Media()
         self.schema_fields = schema._meta.get_fields()
         self.schema_array = schema_array
         super(JSONWidget, self).__init__(attrs=attrs)
@@ -20,6 +22,7 @@ class JSONWidget(Widget):
         final_attrs['field_name'] = name
 
         context['widget']['subwidgets'] = self.get_sub_widgets(name, self.schema_fields, final_attrs, value)
+        context['widget']['media'] = self._media
 
         return context
 
@@ -38,8 +41,9 @@ class JSONWidget(Widget):
                     {field.name: self.get_widget_values(sub_schema_fields, data, field.name)}
                 )
             else:
-                field_value = data.get('{}_{}'.format(parent_name, field.name))
                 # recursion exit.
+                field_value = data.get('{}_{}'.format(parent_name, field.name))
+
                 save_data.update(
                     {field.name: field_value}
                 )
@@ -83,12 +87,16 @@ class JSONWidget(Widget):
                 # recursion exit.
                 field_widget = field.formfield().widget
 
+                self._media += field_widget.media
+
                 widget_value = self.decompress(field, value)
 
                 widget_name = '{}_{}'.format(name, widget_attrs['field_name'])
 
                 subwidgets.append(
-                    field_widget.get_context(widget_name, widget_value, widget_attrs)['widget']
+                    {
+                        'render': field_widget.render(widget_name, widget_value, widget_attrs)
+                    }
                 )
         return subwidgets
 

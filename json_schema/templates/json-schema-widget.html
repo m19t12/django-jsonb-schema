@@ -1,7 +1,7 @@
 <div class="form-row" style="border-bottom: none;">
+    {{ widget.media }}
     <br>
 </div>
-
 
 {% if widget.sub_widget %}
     {% with widget=widget.sub_widget %}{% endwith %}
@@ -14,7 +14,7 @@
     {% else %}
         <div class="form-row" style="border-bottom: none;">
             <label for="{{ widget.name }}">{{ widget.name }}</label>
-            {% include widget.template_name %}
+            {{ widget.render }}
         </div>
     {% endif %}
 {% endfor %}
