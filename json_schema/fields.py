@@ -14,8 +14,11 @@ class JSONSchemaField(JSONField):
     def validate(self, value, model_instance):
         super(JSONSchemaField, self).validate(value, model_instance)
 
-        if self.schema:
+        if self.schema and not self.schema_array:
             self.sub_validation(value, self.schema())
+
+        if self.schema and self.schema_array:
+            self.list_sub_validation(value, self.schema())
 
     def formfield(self, **kwargs):
         if self.schema:
@@ -28,6 +31,10 @@ class JSONSchemaField(JSONField):
         else:
             defaults = kwargs
         return super(JSONSchemaField, self).formfield(**defaults)
+
+    def list_sub_validation(self, values, schema):
+        for value in values:
+            self.sub_validation(value, schema)
 
     def sub_validation(self, values, schema):
         for field in schema._meta.get_fields():
