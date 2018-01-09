@@ -95,7 +95,8 @@ class JSONWidget(Widget):
 
                 subwidgets.append(
                     {
-                        'render': field_widget.render(widget_name, widget_value, widget_attrs)
+                        'render': field_widget.render(widget_name, widget_value, widget_attrs),
+                        'name': widget_name
                     }
                 )
         return subwidgets
