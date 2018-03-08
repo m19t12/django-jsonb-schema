@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-json-schema',
-    version='0.4',
+    version='0.5',
     packages=['json_schema'],
     include_package_data=True,
     license='GPL License',
@@ -24,6 +24,7 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GPL License',
         'Operating System :: OS Independent',
