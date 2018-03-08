@@ -14,14 +14,14 @@ class SchoolSchema(models.Model):
 class SonSchema(models.Model):
     name = models.CharField(max_length=128)
     age = models.IntegerField()
-    school = SchemaForeignKey(SchoolSchema)
+    school = SchemaForeignKey(SchoolSchema, on_delete=models.CASCADE)
     Meta = SchemaMeta()
 
 
 class ParentSchema(models.Model):
     name = models.CharField(max_length=128, default="test")
     age = models.IntegerField()
-    son = SchemaForeignKey(SonSchema)
+    son = SchemaForeignKey(SonSchema, on_delete=models.CASCADE)
     Meta = SchemaMeta()
 
 

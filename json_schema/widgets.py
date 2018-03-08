@@ -1,6 +1,7 @@
 # coding=utf-8
 import ujson
 
+import django
 from django.db.models.fields import NOT_PROVIDED
 from django.forms import Media
 from django.forms import Widget
@@ -35,7 +36,10 @@ class JSONWidget(Widget):
         for field in fields:
             if field.is_relation:
                 # recursion if find relationship.
-                sub_schema = field.rel.to
+                if django.get_version() < '2':
+                    sub_schema = field.rel.to
+
+                sub_schema = field.related_model
                 sub_schema_fields = sub_schema._meta.get_fields()
                 save_data.update(
                     {field.name: self.get_widget_values(sub_schema_fields, data, field.name)}
@@ -62,7 +66,10 @@ class JSONWidget(Widget):
 
             if field.is_relation:
                 # recursion if find relationship.
-                sub_schema = field.rel.to
+                if django.get_version() < '2':
+                    sub_schema = field.rel.to
+
+                sub_schema = field.related_model
                 sub_schema_fields = sub_schema._meta.get_fields()
 
                 sub_widget_value = self.decompress(field, value)
