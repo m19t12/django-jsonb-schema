@@ -15,7 +15,7 @@ class JSONSchemaField(JSONField):
         super(JSONSchemaField, self).validate(value, model_instance)
 
         if self.schema:
-            self.sub_validation(value, self.schema())
+            self.sub_validation(value, self.schema)
 
     def formfield(self, **kwargs):
         if self.schema:
