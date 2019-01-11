@@ -16,7 +16,7 @@ postgresql jsonb data.
 
 ## Installing
 ```
-pip install django_json_schema
+pip install django_jsonb_schema
 ```
 
 ## Usage
