@@ -7,5 +7,4 @@ class SchemaMeta:
 
 
 class SchemaForeignKey(ForeignKey):
-    def validate(self, value, model_instance):
-        pass
+    pass
