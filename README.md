@@ -84,5 +84,5 @@ class JSONSchemaModel(models.Model):
     parent = JSONSchemaField(schema=ParentSchema, blank=True, schema_array=True)
 ```
 
-##TODO
+## TODO
 Support array elements.
