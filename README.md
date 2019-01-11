@@ -81,7 +81,7 @@ from .schemas import ParentSchema
 class JSONSchemaModel(models.Model):
     simple_text = models.CharField(blank=True, null=True, max_length=256)
     simple_int = models.IntegerField(blank=True, null=True)
-    parent = JSONSchemaField(schema=ParentSchema, blank=True, schema_array=True)
+    parent = JSONSchemaField(schema=ParentSchema, blank=True)
 ```
 
 ## TODO
