@@ -32,15 +32,12 @@ class JSONSchemaField(JSONField):
     def sub_validation(self, values, schema):
         for field in schema._meta.get_fields():
             field_name = field.name
+            field_value = values.get(field_name)
+            sub_schema = field.related_model
 
-            if field_name in values:
-                field_value = values[field_name]
-            else:
-                field_value = None
-
-            if field.is_relation:
-                sub_schema = field.related_model()
+            if sub_schema:
                 self.sub_validation(field_value, sub_schema)
+                return
 
             try:
                 field.clean(field_value, schema)
