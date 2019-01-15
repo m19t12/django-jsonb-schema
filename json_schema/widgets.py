@@ -28,8 +28,11 @@ class JSONWidget(Widget):
         return context
 
     def value_from_datadict(self, data, files, name):
-        saved_data = self.get_widget_values(self.schema_fields, data, name)
-        return ujson.dumps(saved_data)
+        if files:
+            saved_data = self.get_widget_values(self.schema_fields, files, name)
+        else:
+            saved_data = self.get_widget_values(self.schema_fields, data, name)
+        return saved_data
 
     def get_widget_values(self, fields, data, parent_name):
         save_data = {}
@@ -121,3 +124,7 @@ class JSONWidget(Widget):
                 return field.default
             else:
                 return None
+
+    @property
+    def needs_multipart_form(self):
+        return any(f.get_internal_type() in ('FileField', 'ImageField',) for f in self.schema_fields)

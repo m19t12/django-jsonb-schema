@@ -11,8 +11,6 @@ class JSONSchemaModel(models.Model):
     simple_int = models.IntegerField(blank=True, null=True)
     parent = JSONSchemaField(schema=ParentSchema, blank=True, schema_array=True)
 
-    # description = RichTextField(blank=True, null=True, max_length=1024)
-
     def __str__(self):
         return '{}'.format(self.pk)
 

@@ -64,7 +64,7 @@ class TestJSONSchemaField(object):
         widget = schema_field.formfield().widget
         save_values = widget.value_from_datadict(correct_form_values, None, 'parent')
 
-        assert eval(save_values) == correct_save_values
+        assert save_values == correct_save_values
 
     def test_widget_decompress(self):
         correct_value = {
