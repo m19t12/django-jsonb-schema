@@ -5,7 +5,7 @@ certifi==2017.11.5
 chardet==3.0.4
 coverage==4.5.2
 coveralls==1.5.1
-Django==2.1.11
+Django==2.2
 django-ckeditor==5.4.0
 django-js-asset==0.1.1
 django-polls==0.1.0
@@ -25,4 +25,4 @@ pytz==2018.9
 requests==2.21.0
 six==1.11.0
 ujson==1.35
-urllib3==1.24.1
+urllib3==1.24.2
